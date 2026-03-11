@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Кодът на ИЗХОДА</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;500;700&display=swap');
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        
+        :root {
+            --neon-blue: #00f3ff;
+            --neon-purple: #bc13fe;
+            --neon-green: #0aff0a;
+            --neon-red: #ff003c;
+            --neon-yellow: #ffee00;
+            --dark-bg: #050508;
+            --panel-bg: rgba(10, 15, 30, 0.98);
+        }
+
+        html, body {
+            font-family: 'Rajdhani', sans-serif;
+            background: var(--dark-bg);
+            color: #fff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 10px;
+            padding-bottom: 100px;
+        }
+
+        .login-box {
+            background: var(--panel-bg);
+            border: 2px solid var(--neon-blue);
+            border-radius: 15px;
+            padding: 30px 20px;
+            margin-top: 50px;
+            text-align: center;
+        }
+
+        .game-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            color: var(--neon-blue);
+            margin-bottom: 10px;
+            text-shadow: 0 0 15px currentColor;
+        }
+
+        .login-input {
+            background: rgba(0, 0, 0, 0.6);
+            border: 2px solid var(--neon-blue);
+            color: #fff;
+            padding: 15px;
+            font-size: 1.1rem;
+            width: 100%;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-family: 'Rajdhani', sans-serif;
+        }
+
+        .btn {
+            background: transparent;
+            border: 2px solid var(--neon-blue);
+            color: var(--neon-blue);
+            padding: 18px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            border-radius: 10px;
+            transition: all 0.2s;
+            width: 100%;
+        }
+
+        .btn-success {
+            background: var(--neon-blue);
+            color: #000;
+        }
+
+        .hud {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .hud-panel {
+            background: var(--panel-bg);
+            border: 1px solid var(--neon-blue);
+            border-radius: 8px;
+            padding: 10px 5px;
+            text-align: center;
+        }
+
+        .hud-value {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--neon-blue);
+        }
+
+        .game-area {
+            background: var(--panel-bg);
+            border: 2px solid var(--neon-blue);
+            border-radius: 12px;
+            padding: 20px 15px;
+        }
+
+        .task-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.1rem;
+            color: var(--neon-blue);
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            text-align: center;
+        }
+
+        .task-input, .task-select {
+            background: rgba(0, 0, 0, 0.6);
+            border: 2px solid var(--neon-blue);
+            color: #fff;
+            padding: 15px;
+            font-size: 1.1rem;
+            width: 100%;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .feedback {
+            margin-top: 15px;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: 700;
+            text-align: center;
+            display: none;
+        }
+
+        .feedback.correct {
+            background: rgba(10, 255, 10, 0.2);
+            border: 2px solid var(--neon-green);
+            color: var(--neon-green);
+            display: block;
+        }
+
+        .feedback.incorrect {
+            background: rgba(255, 0, 60, 0.2);
+            border: 2px solid var(--neon-red);
+            color: var(--neon-red);
+            display: block;
+        }
+
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Login -->
+        <div id="login-screen">
+            <div class="login-box">
+                <div class="game-title">КОДЪТ НА ИЗХОДА</div>
+                <input type="text" class="login-input" id="student-name" placeholder="Твоето име...">
+                <input type="text" class="login-input" id="student-class" placeholder="Клас (напр. 11а)...">
+                <input type="tel" class="login-input" id="class-code" placeholder="Код на часа..." maxlength="4">
+                <button class="btn btn-success" onclick="joinGame()">ВЛЕЗ В ИГРАТА</button>
+            </div>
+        </div>
+
+        <!-- Game -->
+        <div id="game-screen" class="hidden">
+            <div class="hud">
+                <div class="hud-panel">
+                    <div>Точки</div>
+                    <div class="hud-value" id="score">0</div>
+                </div>
+                <div class="hud-panel">
+                    <div>Време</div>
+                    <div class="hud-value" id="timer">45:00</div>
+                </div>
+                <div class="hud-panel">
+                    <div>Ниво</div>
+                    <div class="hud-value" id="level">1</div>
+                </div>
+            </div>
+
+            <div class="game-area" id="task-area">
+                <!-- Tasks will appear here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Game Data
+        const QUESTIONS = {
+            1: [
+                { q: "Цената е 800 лв., бюджетът е 500 лв. Предлагане: 100 бр., търсене: 300 бр. С колко увеличи предлагането?", a: "200" },
+                { q: "Купуваш скенер (200 лв.) или ускорител (200 лв.). Какво губиш ако вземеш скенера?", options: ["5 минути", "200 лв.", "Нищо"], a: "0" },
+                { q: "Батерии: 1-ва 100%, 2-ра 70%, 3-та 40%. Общо от 3×100 ед.?", a: "210" }
+            ],
+            2: [
+                { q: "Инфлация 25%. Какво правиш с лихвата?", options: ["Повишавам", "Понижавам"], a: "0" },
+                { q: "Кое влиза в БВП?", options: ["Автомобили", "Услуги", "И двете"], a: "2" },
+                { q: "Рецесия! Какво прави правителството?", options: ["↑ Разходи, ↓ Данъци", "↓ Разходи, ↑ Данъци"], a: "0" }
+            ],
+            3: [
+                { q: "Ти: 10 софтуер/ч или 5 хардуер/ч. Друг: 4 софтуер/ч или 8 хардуер/ч. Къде имаш предимство?", options: ["Софтуер", "Хардуер"], a: "0" },
+                { q: "Такса: 500 EUR. Курс: 1 лв. = 0.80 EUR. Колко лв.?", a: "625" },
+                { q: "Кое премахва мита?", options: ["Свободна търговия", "Ембарго"], a: "0" }
+            ]
+        };
+
+        let gameState = {
+            playerId: null,
+            name: '',
+            class: '',
+            score: 0,
+            level: 1,
+            task: 1,
+            correct: 0,
+            total: 0,
+            cheatUsed: false
+        };
+
+        function joinGame() {
+            const name = document.getElementById('student-name').value.trim();
+            const cls = document.getElementById('student-class').value.trim();
+            const code = document.getElementById('class-code').value.trim();
+
+            if (!name || !cls || !code) {
+                alert('Моля, попълни всички полета!');
+                return;
+            }
+
+            // Check teacher code
+            const state = JSON.parse(localStorage.getItem('kodat_izhoda_game_state') || '{}');
+            if (code !== state.classCode) {
+                alert('Грешен код!');
+                return;
+            }
+
+            gameState.playerId = 'p_' + Date.now();
+            gameState.name = name;
+            gameState.class = cls;
+
+            // Save player
+            const players = JSON.parse(localStorage.getItem('kodat_izhoda_players') || '[]');
+            players.push({
+                id: gameState.playerId,
+                name: name,
+                class: cls,
+                score: 0,
+                level: 1,
+                task: 1,
+                finished: false,
+                accuracy: 0,
+                cheatUsed: false,
+                joinTime: Date.now()
+            });
+            localStorage.setItem('kodat_izhoda_players', JSON.stringify(players));
+
+            document.getElementById('login-screen').classList.add('hidden');
+            document.getElementById('game-screen').classList.remove('hidden');
+            
+            startSync();
+            showTask();
+        }
+
+        function startSync() {
+            setInterval(() => {
+                const state = JSON.parse(localStorage.getItem('kodat_izhoda_game_state') || '{}');
+                if (state.endTime) {
+                    const remaining = Math.max(0, state.endTime - Date.now());
+                    const m = Math.floor(remaining / 60000);
+                    const s = Math.floor((remaining % 60000) / 1000);
+                    document.getElementById('timer').textContent = `${m}:${s.toString().padStart(2, '0')}`;
+                }
+                
+                // Update server
+                const players = JSON.parse(localStorage.getItem('kodat_izhoda_players') || '[]');
+                const me = players.find(p => p.id === gameState.playerId);
+                if (me) {
+                    me.score = gameState.score;
+                    me.level = gameState.level;
+                    me.task = gameState.task;
+                    me.accuracy = gameState.total > 0 ? Math.round((gameState.correct / gameState.total) * 100) : 0;
+                    me.cheatUsed = gameState.cheatUsed;
+                    localStorage.setItem('kodat_izhoda_players', JSON.stringify(players));
+                }
+            }, 2000);
+        }
+
+        function showTask() {
+            const q = QUESTIONS[gameState.level][gameState.task - 1];
+            const area = document.getElementById('task-area');
+            
+            let input = '';
+            if (q.options) {
+                input = `<select class="task-select" id="answer"><option value="">Избери...</option>${q.options.map((o, i) => `<option value="${i}">${o}</option>`).join('')}</select>`;
+            } else {
+                input = `<input type="text" class="task-input" id="answer" placeholder="Отговор...">`;
+            }
+
+            area.innerHTML = `
+                <div class="task-title">НИВО ${gameState.level} - ЗАДАЧА ${gameState.task}</div>
+                <div style="margin-bottom: 20px; font-size: 1.1rem;">${q.q}</div>
+                ${input}
+                <button class="btn btn-success" onclick="checkAnswer('${q.a}')">ПРОВЕРИ</button>
+                <div class="feedback" id="feedback"></div>
+            `;
+            
+            document.getElementById('score').textContent = gameState.score;
+            document.getElementById('level').textContent = gameState.level;
+        }
+
+        function checkAnswer(correct) {
+            const val = document.getElementById('answer').value;
+            const fb = document.getElementById('feedback');
+            
+            gameState.total++;
+            
+            if (val === correct) {
+                gameState.correct++;
+                gameState.score += 1000;
+                fb.textContent = "✓ ВЕРНО!";
+                fb.className = "feedback correct";
+                
+                setTimeout(() => {
+                    if (gameState.task < 3) {
+                        gameState.task++;
+                    } else if (gameState.level < 3) {
+                        gameState.level++;
+                        gameState.task = 1;
+                    } else {
+                        endGame();
+                        return;
+                    }
+                    showTask();
+                }, 1000);
+            } else {
+                gameState.score = Math.max(0, gameState.score - 200);
+                fb.textContent = "✗ ГРЕШКА!";
+                fb.className = "feedback incorrect";
+            }
+        }
+
+        function endGame() {
+            const players = JSON.parse(localStorage.getItem('kodat_izhoda_players') || '[]');
+            const me = players.find(p => p.id === gameState.playerId);
+            if (me) {
+                me.finished = true;
+                me.finishTime = Date.now();
+                me.score = gameState.score;
+                localStorage.setItem('kodat_izhoda_players', JSON.stringify(players));
+            }
+            
+            document.getElementById('task-area').innerHTML = `
+                <div class="task-title">ИГРАТА ПРИКЛЮЧИ!</div>
+                <div style="text-align: center; font-size: 1.5rem;">
+                    <div>Точки: ${gameState.score}</div>
+                    <div style="margin-top: 20px;">Благодарим за участието!</div>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>
